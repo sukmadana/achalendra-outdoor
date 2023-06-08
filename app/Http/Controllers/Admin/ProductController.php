@@ -4,9 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 use App\Services\ProductService;
 use App\Models\ProductGallery;
+use App\Models\Product;
+
+use Storage;
 
 class ProductController extends Controller
 {
@@ -26,10 +30,14 @@ class ProductController extends Controller
         return $this->product->getAll($request->all());
     }
 
-    public function UploadImage(Request $request){
-        $file = $request->file('images');
-        $resp = $request['paramName'];
-        return response()->json($resp, 200);
+    public function setSlug($value){
+        $slug = Str::Slug($value);
+            if(Product::whereSlug($slug)->exists()){
+                return $slug = Str::slug( $value . '-' . Str::random(3));
+            }
+
+        return $slug;
+
     }
 
     /**
@@ -40,11 +48,35 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $this->product->addOrUpdate($request->all());
+
+        $product = new Product();
+        $product->slug = $this->setSlug($request->name);
+        $product->product_name = $request->name;
+        $product->price = $request->price;
+        $product->description = $request->description;
+        $product->qty = $request->qty;
+        $product->status = $request->status;
+        $product->category_id = $request->category_id;
+        $product->attributes = $request->attributes;
+        $product->tags = $request->tags;
+        $product->save();
 
 
+        $images = $request->images;
 
-        return $data;
+        foreach($images as $image) {
+            $imagePath = Storage::disk('uploads')->put('products/' . $image->getClientOriginalName(), $image);
+            ProductGallery::create([
+                'file_url' => env('APP_URL') . '/uploads/' . $imagePath ,
+                'file_path' => '/uploads/' . $imagePath,
+                'file_name' => $image->getClientOriginalName(),
+                'product_id' => $product->id
+            ]);
+        }
+
+        $data = Product::with('productCategory', 'productGallery')->where('slug', $product->slug)->first();
+
+        return response()->json($data, 200);
     }
 
     /**

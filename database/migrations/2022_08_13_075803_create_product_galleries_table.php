@@ -16,8 +16,8 @@ class CreateProductGalleriesTable extends Migration
         Schema::create('product_galleries', function (Blueprint $table) {
             $table->id();
             $table->string('file_url');
+            $table->string('file_path');
             $table->string('file_name');
-            $table->char('main_image', 10)->nullable();
             $table->foreignId('product_id')->constrained('products');
             $table->timestamps();
         });

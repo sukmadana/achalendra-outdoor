@@ -8,4 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class ProductGallery extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
+
+    /**
+     * Get the product that owns the ProductGallery
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'id', 'product_id');
+    }
 }

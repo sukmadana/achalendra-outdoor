@@ -6,6 +6,7 @@ use League\Fractal\TransformerAbstract;
 
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\ProductGallery;
 use App\Transformers\ProductCategoryTransformer;
 
 class ProductTransformer extends TransformerAbstract
@@ -18,7 +19,7 @@ class ProductTransformer extends TransformerAbstract
     protected array $defaultIncludes = [
         // 'product_category'
     ];
-    
+
     /**
      * List of resources possible to include
      *
@@ -27,7 +28,7 @@ class ProductTransformer extends TransformerAbstract
     protected array $availableIncludes = [
         //
     ];
-    
+
     /**
      * A Fractal transformer.
      *
@@ -42,8 +43,14 @@ class ProductTransformer extends TransformerAbstract
             'price' => $product->price,
             'qty' => $product->qty,
             'category' => $product->productCategory,
+            'gallery' => $this->getGalleryImage($product),
             'status' => $product->status
         ];
+    }
+
+    public function getGalleryImage($product){
+        $galleries = ProductGallery::where('product_id', $product->id)->get();
+        return $galleries;
     }
 
     // public function includeProductCategory(Product $product){

@@ -22,4 +22,14 @@ class Product extends Model
     public function productCategory(){
         return $this->hasOne(ProductCategory::class, 'id', 'category_id');
     }
+
+    /**
+     * Get all of the comments for the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function productGallery()
+    {
+        return $this->hasMany(ProductGallery::class, 'id', 'product_id');
+    }
 }

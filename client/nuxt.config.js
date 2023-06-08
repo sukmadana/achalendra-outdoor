@@ -48,6 +48,7 @@ module.exports = {
         "~/plugins/axios",
         "~/plugins/fontawesome",
         "~/plugins/vue-repeater",
+        "~/plugins/element-ui",
         "~/plugins/nuxt-client-init",
         { src: "~plugins/bootstrap", mode: "client" },
     ],

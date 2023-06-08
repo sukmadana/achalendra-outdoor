@@ -29,7 +29,7 @@ class ProductRepository extends BaseRepository
     }
 
     public function getProduct(){
-        $product = Product::with(['productCategory'])->get();
+        $product = Product::with(['productCategory', 'productGallery'])->get();
 
         return $product;
     }
