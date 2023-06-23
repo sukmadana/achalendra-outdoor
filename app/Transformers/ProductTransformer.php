@@ -37,11 +37,14 @@ class ProductTransformer extends TransformerAbstract
     public function transform(Product $product)
     {
         return [
+            'id' => $product->id,
             'slug' => $product->slug,
             'name' => $product->product_name,
             'description' => $product->description,
             'price' => $product->price,
             'qty' => $product->qty,
+            'attributes' => $product->attributes,
+            'tags' => $product->tags,
             'category' => $product->productCategory,
             'gallery' => $this->getGalleryImage($product),
             'status' => $product->status

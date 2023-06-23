@@ -53,11 +53,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('admin/product', [AdminProductController::class, 'index']);
     Route::get('admin/product/delete/{id}', [AdminProductController::class, 'destroy']);
+    Route::get('admin/product/get/{slug}', [AdminProductController::class, 'show']);
     Route::post('admin/product/create', [AdminProductController::class, 'store']);
     Route::patch('admin/product/update/{slug}', [AdminProductController::class, 'update']);
-
-    Route::post('admin/product/upload', [AdminProductController::class, 'UploadImage']);
-
 
 });
 

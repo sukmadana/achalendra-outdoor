@@ -9,6 +9,8 @@ const page = (path) => () =>
 
 const routes = [
   { path: "/", name: "welcome", component: page("welcome.vue") },
+  { path: "/dashboard", name: "dashboard", component: page("user/dashboard.vue") },
+  { path: "/profile", name: "profile", component: page("user/profile.vue") },
 
   { path: "/login", name: "login", component: page("auth/login.vue") },
   { path: "/register", name: "register", component: page("auth/register.vue") },
@@ -49,6 +51,11 @@ const routes = [
     path: "/admin/product/image/:slug",
     name: "admin.product.image",
     component: page("admin/product/imageControll.vue")
+  },
+  {
+    path: "/admin/product/edit/:slug",
+    name: "admin.product.edit",
+    component: page("admin/product/editProduct.vue")
   },
   {
     path: "/admin/product/add",

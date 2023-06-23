@@ -110,7 +110,33 @@ class ProductController extends Controller
      */
     public function update(Request $request, $slug)
     {
-        return $this->product->addOrUpdate($request->all(), $slug);
+        $product = Product::where('slug', $slug)->first();
+        $product->product_name = $request->input('name');
+        $product->price = $request->price;
+        $product->description = $request->description;
+        $product->qty = $request->qty;
+        $product->status = $request->status;
+        $product->category_id = $request->category_id;
+        $product->attributes = $request->attributes;
+        $product->tags = $request->tags;
+        $product->update();
+
+        if ($request->hasFile('images')) {
+            $images = $request->file('images');
+            foreach($images as $image) {
+                $imagePath = Storage::disk('uploads')->put('products/' . $image->getClientOriginalName(), $image);
+                ProductGallery::create([
+                    'file_url' => env('APP_URL') . '/uploads/' . $imagePath ,
+                    'file_path' => '/uploads/' . $imagePath,
+                    'file_name' => $image->getClientOriginalName(),
+                    'product_id' => $product->id
+                ]);
+
+            }
+
+        }
+
+        return $this->product->bySlug($slug);
     }
 
     /**
@@ -121,9 +147,23 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $data = $this->product->delete($id);
+        $data = Product::find($id);
 
-        if ($data) {
+        $images = ProductGallery::where('product_id', $id)->get();
+
+        if ($images) {
+            foreach ($images as $image) {
+                $deleteImage = Storage::disk('uploads')->delete($image->file_path);
+
+                if ($deleteImage) {
+                    $image->delete();
+                }
+            }
+        }
+
+        $deleteData = $data->delete();
+
+        if ($deleteData) {
             return response()->json([
                 'status' => 'Success'
             ], 200);

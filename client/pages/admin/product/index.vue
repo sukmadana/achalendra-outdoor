@@ -27,7 +27,10 @@
                 >
                     <template v-slot:item.action="{ item }">
                         <v-btn
-                            @click.stop="setUpdate(item)"
+                            :to="{
+                                name: 'admin.product.edit',
+                                params: { slug: item.slug },
+                            }"
                             color="success"
                             class="my-2 mx-1"
                             fab
@@ -35,9 +38,11 @@
                         >
                             <v-icon>mdi-pencil</v-icon>
                         </v-btn>
+                        <!--
                         <v-btn :to="{ name: 'admin.product.image', params: { slug: item.slug } }" color="accent" class="my-2 mx-1" fab small>
                             <v-icon>mdi-image-plus</v-icon>
                         </v-btn>
+                        -->
                         <v-btn
                             @click.stop="setDelete(item.id)"
                             color="error"
@@ -57,6 +62,7 @@
 import { mapGetters, mapState } from "vuex";
 import axios from "axios";
 import Form from "vform";
+import Swal from "sweetalert2";
 
 export default {
     layout: "admin",
@@ -67,8 +73,8 @@ export default {
             headers: [
                 { text: "Product Name", value: "name" },
                 { text: "Slug", value: "slug" },
-                {text: "Price", value: "price"},
-                {text: "Category", value: "category.category_name"},
+                { text: "Price", value: "price" },
+                { text: "Category", value: "category.category_name" },
                 { text: "Action", value: "action", sortable: false },
             ],
             form: new Form({
@@ -80,9 +86,9 @@ export default {
 
     async mounted() {
         let getData = await this.$store.dispatch("product/fetchProducts");
-        setTimeout(()=> {
-            this.loading = false
-        }, 2000)
+        setTimeout(() => {
+            this.loading = false;
+        }, 2000);
     },
     computed: {
         ...mapGetters({
@@ -90,7 +96,47 @@ export default {
         }),
     },
     methods: {
+        setDelete(id) {
+            Swal.fire({
+                icon: "warning",
+                title: "Delete Produk ",
+                text: "Apakah product ini akan dihapus?",
+                reverseButtons: true,
+                showCancelButton: true,
+                confirmButtonText: "Ok",
+                cancelButtonText: "Batal",
+            }).then((result) => {
+                if (result.isConfirmed) {
 
+                    this.confirmDelete(id)
+                    Swal.fire(
+                        "Deleted!",
+                        "Your file has been deleted.",
+                        "success"
+                    );
+                    redirect({ name: "admin.product" });
+                }
+
+            });
+        },
+
+        async confirmDelete(id) {
+            try {
+                const response = await axios.get(
+                    "/admin/product/delete/" + id
+                );
+                if (response.status) {
+                    let getData = await this.$store.dispatch(
+                        "product/fetchProducts"
+                    );
+                    mapGetters({
+                        products: "product/products"
+                    });
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        },
     },
 };
 </script>

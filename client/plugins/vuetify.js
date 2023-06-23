@@ -8,10 +8,10 @@ export default (ctx) => {
         theme: {
             themes: {
                 light: {
-                    primary: '#3D4E17',
-                    secondary: '#C7A003',
+                    primary: '#FFAB00',
+                    secondary: '#81C784',
                     tertiary: '#151F1E',
-                    accent: '#82B1FF',
+                    accent: '#FFD600',
                     error: '#f55a4e',
                     info: '#00d3ee',
                     success: '#5cb860',

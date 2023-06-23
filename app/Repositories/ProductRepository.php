@@ -60,7 +60,10 @@ class ProductRepository extends BaseRepository
                 'price' => $input['price'],
                 'description' => $input['description'],
                 'qty' => $input['qty'],
-                'category_id' => $input['category_id']
+                'status' => $input['status'],
+                'category_id' => $input['category_id'],
+                'attributes' => $input['attributes'],
+                'tags' => $input['tags']
             ]);
 
             if ($prod) {

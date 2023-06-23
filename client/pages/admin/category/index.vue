@@ -208,6 +208,7 @@ export default {
                     isLoaded: "categories/isLoaded",
                 });
 
+                this.$router.push({ name: "admin.category" });
                 this.clearForm();
             } catch (error) {
                 console.log(error);
@@ -276,6 +277,7 @@ export default {
                 });
 
                 this.clearUpdate();
+                this.$router.push({ name: "admin.category" });
             } catch (error) {
                 console.log(error);
             }
