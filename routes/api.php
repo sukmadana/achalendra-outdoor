@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\FrontendProductController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Admin\AttributeController as AdminAttributeController;
@@ -71,4 +72,10 @@ Route::group(['middleware' => 'guest:api'], function () {
 
     Route::post('oauth/{driver}', [OAuthController::class, 'redirect']);
     Route::get('oauth/{driver}/callback', [OAuthController::class, 'handleCallback'])->name('oauth.callback');
+
+    // Frontend
+    Route::get('data-product', [FrontendProductController::class, 'getProduct']);
+    Route::get('data-all-product', [FrontendProductController::class, 'getAllProduct']);
+    Route::get('data-product-category', [FrontendProductController::class, 'getProductCategory']);
+    Route::get('single-product/{slug}', [FrontendProductController::class, 'getProductBySlug']);
 });

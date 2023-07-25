@@ -18,9 +18,7 @@
                 ></v-img>
             </template>
 
-
             <v-app-bar-title> Achalendra Outdoor </v-app-bar-title>
-
         </v-app-bar>
         <v-sheet
             id="scrolling-techniques-5"
@@ -47,9 +45,15 @@
             <v-container class="pb-10">
                 <v-row>
                     <v-col cols="12">
-                        <v-card class="px-5 py-10">
+                        <div v-if="loading">
+                            <v-skeleton-loader type="image"></v-skeleton-loader>
+                        </div>
+                        <v-card v-if="!loading" class="px-5 py-10">
                             <v-row>
-                                <v-col cols="4" class="d-flex justify-content-center align-center flex-column">
+                                <v-col
+                                    cols="4"
+                                    class="d-flex justify-content-center align-center flex-column"
+                                >
                                     <v-btn
                                         color="primary"
                                         fab
@@ -62,7 +66,10 @@
                                     </v-btn>
                                     <span>Dashboard</span>
                                 </v-col>
-                                <v-col cols="4" class="d-flex justify-content-center align-center flex-column">
+                                <v-col
+                                    cols="4"
+                                    class="d-flex justify-content-center align-center flex-column"
+                                >
                                     <v-btn
                                         color="primary"
                                         fab
@@ -71,11 +78,16 @@
                                         plain
                                         raised
                                     >
-                                        <v-icon dark> mdi-calendar-multiple </v-icon>
+                                        <v-icon dark>
+                                            mdi-calendar-multiple
+                                        </v-icon>
                                     </v-btn>
                                     <span>Pesanan</span>
                                 </v-col>
-                                <v-col cols="4" class="d-flex justify-content-center align-center flex-column">
+                                <v-col
+                                    cols="4"
+                                    class="d-flex justify-content-center align-center flex-column"
+                                >
                                     <v-btn
                                         color="primary"
                                         fab
@@ -84,11 +96,16 @@
                                         plain
                                         raised
                                     >
-                                        <v-icon dark> mdi-credit-card-outline </v-icon>
+                                        <v-icon dark>
+                                            mdi-credit-card-outline
+                                        </v-icon>
                                     </v-btn>
                                     <span>Tagihan</span>
                                 </v-col>
-                                <v-col cols="4" class="d-flex justify-content-center align-center flex-column">
+                                <v-col
+                                    cols="4"
+                                    class="d-flex justify-content-center align-center flex-column"
+                                >
                                     <v-btn
                                         color="primary"
                                         fab
@@ -97,11 +114,16 @@
                                         plain
                                         raised
                                     >
-                                        <v-icon dark> mdi-calendar-check </v-icon>
+                                        <v-icon dark>
+                                            mdi-calendar-check
+                                        </v-icon>
                                     </v-btn>
                                     <span>Kembalikan</span>
                                 </v-col>
-                                <v-col cols="4" class="d-flex justify-content-center align-center flex-column">
+                                <v-col
+                                    cols="4"
+                                    class="d-flex justify-content-center align-center flex-column"
+                                >
                                     <v-btn
                                         color="primary"
                                         fab
@@ -110,11 +132,16 @@
                                         plain
                                         raised
                                     >
-                                        <v-icon dark> mdi-calendar-clock-outline </v-icon>
+                                        <v-icon dark>
+                                            mdi-calendar-clock-outline
+                                        </v-icon>
                                     </v-btn>
                                     <span>History</span>
                                 </v-col>
-                                <v-col cols="4" class="d-flex justify-content-center align-center flex-column">
+                                <v-col
+                                    cols="4"
+                                    class="d-flex justify-content-center align-center flex-column"
+                                >
                                     <v-btn
                                         color="primary"
                                         fab
@@ -137,30 +164,49 @@
             <v-container class="py-10">
                 <v-row>
                     <v-col cols="12">
-                        <h2>Produk populer</h2>
-                        <p class="text-md-caption">Jangan sampai kehabisan produk utama ini yang biasanya paling kalian perlukan.</p>
+                        <div v-if="loading">
+                            <v-skeleton-loader
+                                type="card-heading,text@2"
+                            ></v-skeleton-loader>
+                        </div>
+                        <div v-if="!loading">
+                            <h2>Produk populer</h2>
+                            <p class="text-md-caption">
+                                Jangan sampai kehabisan produk utama ini yang
+                                biasanya paling kalian perlukan.
+                            </p>
+                        </div>
                     </v-col>
                 </v-row>
             </v-container>
 
             <!--CATEGORY LIST-->
             <v-sheet class="mx-auto" max-width="700">
-                <v-slide-group multiple show-arrows>
+                <v-slide-group show-arrows v-model="model" value="categories">
                     <v-slide-item
                         v-for="n in 5"
                         :key="n"
+                        v-slot="{ active, toggle }"
+                        class="mr-5"
+                        v-if="loading"
+                    >
+                        <v-skeleton-loader type="chip"></v-skeleton-loader>
+                    </v-slide-item>
+                    <v-slide-item
+                        v-for="cat in categories"
+                        :key="cat.id"
                         v-slot="{ active, toggle }"
                     >
                         <v-btn
                             class="mx-2"
                             :input-value="active"
-                            active-class="purple white--text"
+                            active-class="secondary white--text"
                             depressed
                             rounded
                             color="primary"
                             @click="toggle"
                         >
-                            Options {{ n }}
+                            {{cat.name}}
                         </v-btn>
                     </v-slide-item>
                 </v-slide-group>
@@ -170,25 +216,34 @@
             <!--FEATURE PRODUCT-->
             <v-container class="py-5 md:py-15">
                 <v-row class="feature-product py-5">
-                    <v-col cols="12" md="4" v-for="n in 6" :key="n">
+                    <v-col cols="12" v-if="loading" v-for="n in 4" :key="n">
+                        <v-skeleton-loader type="card"></v-skeleton-loader>
+                    </v-col>
+                    <v-col
+                        cols="12"
+                        md="4"
+                        v-for="product in products"
+                        :key="product.id"
+                        v-if="!loading"
+                    >
                         <v-card class="mx-auto" max-width="400">
                             <v-img
                                 class="white--text align-end"
                                 height="200px"
-                                src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+                                :src="product.gallery[0].file_url"
                             >
                             </v-img>
                             <v-card-title
-                                >Top 10 Australian beaches</v-card-title
+                                >{{product.name}}</v-card-title
                             >
 
                             <v-card-text class="text--primary">
-                                <div>Whitehaven Beach</div>
+                                <div>{{product.category.category_name}}</div>
                             </v-card-text>
 
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn color="primary" text>
+                                <v-btn :to="{name: 'product.single', params: {slug: product.slug}}" color="primary" text>
                                     Pesan Sekarang!
                                 </v-btn>
                             </v-card-actions>
@@ -210,17 +265,34 @@ export default {
     data: () => ({
         title: process.env.appName,
         model: null,
+        filterSelected: null,
+        loading: true,
     }),
 
     head() {
         return { title: this.$t("home") };
     },
 
-    computed: mapGetters({
-        authenticated: "auth/check",
-    }),
+    async mounted() {
+        let getProduct = await this.$store.dispatch("frontend/fetchProducts");
+        let getCategory = await this.$store.dispatch(
+            "frontend/fetchProductCategory"
+        );
+        setTimeout(() => {
+            this.loading = false;
+        }, 2000);
+    },
+
+    computed: {
+        ...mapGetters({
+            authenticated: "auth/check",
+            products: "frontend/products",
+            categories: "frontend/categories",
+        }),
+    },
+    methods: {
+    }
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
